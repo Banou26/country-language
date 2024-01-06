@@ -1,4 +1,4 @@
-const data = require('./trimmed-data.json');
+import data from './trimmed-data.json'
 
 function noop(err, value) {
   if (err) return err;
@@ -8,20 +8,16 @@ function noop(err, value) {
 function isFunction(obj) {
   return typeof obj === 'function';
 }
-
-exports.getCountries = function () {
+export const getCountries = function () {
   return data.countries;
 };
-
-exports.getLanguages = function () {
+export const getLanguages = function () {
   return data.languages;
 };
-
-exports.getLanguageFamilies = function () {
+export const getLanguageFamilies = function () {
   return data.languageFamilies;
 };
-
-exports.getLanguageCodes = function (codeType, cb) {
+export const getLanguageCodes = function (codeType, cb) {
   const { languages } = data;
   const cTypeNames = ['iso639_1', 'iso639_2en', 'iso639_3'];
   const codes = [];
@@ -43,8 +39,7 @@ exports.getLanguageCodes = function (codeType, cb) {
 
   return cb(null, codes);
 };
-
-exports.getCountryCodes = function (codeType, cb) {
+export const getCountryCodes = function (codeType, cb) {
   const { countries } = data;
   const cTypeNames = ['numCode', 'code_2', 'code_3'];
   const codes = [];
@@ -66,38 +61,35 @@ exports.getCountryCodes = function (codeType, cb) {
 
   return cb(null, codes);
 };
-
-exports.languageCodeExists = function (code) {
+export const languageCodeExists = function (code) {
   let codes;
   let exists;
 
   if (!code) return false;
   code = code.toLowerCase();
   for (let i = 1; i < 4; i++) {
-    codes = exports.getLanguageCodes(i);
+    codes = getLanguageCodes(i);
     exists = codes.includes(code);
     if (exists) break;
   }
 
   return exists;
 };
-
-exports.countryCodeExists = function (code) {
+export const countryCodeExists = function (code) {
   let codes;
   let exists;
 
   if (!code) return false;
   code = code.toUpperCase();
   for (let i = 1; i < 4; i++) {
-    codes = exports.getCountryCodes(i);
+    codes = getCountryCodes(i);
     exists = codes.includes(code);
     if (exists) break;
   }
 
   return exists;
 };
-
-exports.getCountry = function (code, cb, noLangInfo) {
+export const getCountry = function (code, cb, noLangInfo) {
   const { countries } = data;
   let country;
   let codeFld;
@@ -130,7 +122,7 @@ exports.getCountry = function (code, cb, noLangInfo) {
       country.languages = [];
       if (langs) {
         for (const l of langs) {
-          country.languages.push(exports.getLanguage(l, null, true));
+          country.languages.push(getLanguage(l, null, true));
         }
       }
     }
@@ -140,8 +132,7 @@ exports.getCountry = function (code, cb, noLangInfo) {
 
   return cb('Wrong type of country code provided');
 };
-
-exports.getLanguage = function (code, cb, noCountryInfo) {
+export const getLanguage = function (code, cb, noCountryInfo) {
   const { languages } = data;
   let language;
   const codeFld = [];
@@ -180,7 +171,7 @@ exports.getLanguage = function (code, cb, noCountryInfo) {
 
       if (countrs)
         for (const c of countrs) {
-          language.countries.push(exports.getCountry(c, null, true));
+          language.countries.push(getCountry(c, null, true));
         }
     }
 
@@ -189,13 +180,12 @@ exports.getLanguage = function (code, cb, noCountryInfo) {
 
   return cb('Wrong type of language code provided');
 };
-
-exports.getCountryLanguages = function (code, cb) {
+export const getCountryLanguages = function (code, cb) {
   const codes = [];
 
   cb = cb || noop;
 
-  exports.getCountry(code, function (err, country) {
+  getCountry(code, function (err, country) {
     if (err) return cb(err);
     for (const l of country.languages) {
       codes.push({
@@ -207,13 +197,12 @@ exports.getCountryLanguages = function (code, cb) {
   });
   return cb(null, codes);
 };
-
-exports.getLanguageCountries = function (code, cb) {
+export const getLanguageCountries = function (code, cb) {
   const codes = [];
 
   cb = cb || noop;
 
-  exports.getLanguage(code, function (err, language) {
+  getLanguage(code, function (err, language) {
     if (err) return cb(err);
     for (const c of language.countries) {
       codes.push({
@@ -225,32 +214,29 @@ exports.getLanguageCountries = function (code, cb) {
   });
   return cb(null, codes);
 };
-
-exports.getCountryMsLocales = function (code, cb) {
+export const getCountryMsLocales = function (code, cb) {
   let codes = [];
 
   cb = cb || noop;
 
-  exports.getCountry(code, function (err, country) {
+  getCountry(code, function (err, country) {
     if (err) return cb(err);
     codes = country.langCultureMs;
   });
   return cb(null, codes);
 };
-
-exports.getLanguageMsLocales = function (code, cb) {
+export const getLanguageMsLocales = function (code, cb) {
   let codes = [];
 
   cb = cb || noop;
 
-  exports.getLanguage(code, function (err, language) {
+  getLanguage(code, function (err, language) {
     if (err) return cb(err);
     codes = language.langCultureMs;
   });
   return cb(null, codes);
 };
-
-exports.getLanguageFamilyMembers = function (family, cb) {
+export const getLanguageFamilyMembers = function (family, cb) {
   const { languages } = data;
   const ret = [];
 
@@ -273,13 +259,12 @@ exports.getLanguageFamilyMembers = function (family, cb) {
     return l.family.toLowerCase() === family;
   });
   for (const l of members) {
-    ret.push(exports.getLanguage(l.iso639_3));
+    ret.push(getLanguage(l.iso639_3));
   }
 
   return cb(null, ret);
 };
-
-exports.getLocales = function (mode) {
+export const getLocales = function (mode) {
   const { locales } = data;
   const ret = [];
   let loc2;

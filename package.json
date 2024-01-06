@@ -13,7 +13,6 @@
   "contributors": [
     "titanism"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
@@ -27,6 +26,8 @@
     "nyc": "^15.1.0",
     "remark-cli": "^11.0.0",
     "remark-preset-github": "^4.0.4",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
     "xo": "^0.50.0"
   },
   "engines": {
@@ -34,7 +35,7 @@
   },
   "files": [
     "index.js",
-    "data.json"
+    "trimmed-data.json"
   ],
   "homepage": "https://github.com/ladjs/country-language",
   "keywords": [
@@ -56,6 +57,7 @@
     "lint": "xo --fix && remark . -qfo && fixpack",
     "prepare": "husky install",
     "pretest": "npm run lint",
-    "test": "cross-env NODE_ENV=test nyc ava"
+    "test": "cross-env NODE_ENV=test nyc ava",
+    "trim": "tsx ./trim.ts"
   }
 }
